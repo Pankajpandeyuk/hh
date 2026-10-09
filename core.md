@@ -7,13 +7,17 @@ The **`core`** package is the central nervous system of the financial ledger. Wh
 ## Visual Structure & Data Flow Within `core`
 
 ```text
-com.fintech.ledger.core
-│
-├── processor/         ──► [1. Orchestrates Pipeline] ──► Coordinates locks, sorting & DB transaction
-│
-├── validation/        ──► [2. Mathematical Check]   ──► Enforces Zero-Sum Rule (Sum of Debits == Credits)
-│
-└── balance/           ──► [3. Sufficiency Check]    ──► Validates account balances & prevents overdrafts
+core/
+├── processor/
+│   ├── TransactionProcessor.java      # Master coordinator executing the multi-step transfer pipeline
+│   ├── TransferOrchestrator.java      # Routes multi-leg splits (merchant payables, platform fees, taxes)
+│   └── DeadlockPreventionService.java # Sorts account IDs lexicographically before lock acquisition
+├── validation/
+│   ├── ZeroSumValidator.java          # Enforces the mathematical invariant: Sum of Debits == Sum of Credits
+│   └── TransactionStructureValidator.java # Validates line item directions, currencies, and positive values
+└── balance/
+    ├── BalanceChecker.java            # Evaluates sender fund sufficiency against available balances
+    └── AccountStateEvaluator.java     # Inspects account status flags (ACTIVE, FROZEN, CLOSED)
 ```
 
 ---

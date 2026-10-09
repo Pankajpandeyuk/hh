@@ -74,19 +74,37 @@ The project is built on a high-performance modern tech stack optimized for massi
 
 ---
 
-## Repository Structure
+## Configuration
 
-```text
-com.fintech.ledger
-│
-├── LedgerApplication.java       # Spring Boot main entry point & thread configuration
-│
-├── gateway                      # REST controllers, DTO data contracts, and global exception handlers
-├── deduplication                # Redis distributed locks, payload hashing, and idempotency interceptors
-├── core                         # Orchestration engine, zero-sum verification, and balance checks
-├── ledger                       # Financial domain entities, enums (DEBIT/CREDIT), and custom exceptions
-├── storage                      # PostgreSQL persistence, row-level locking queries, and append-only entries
-└── streaming                    # Transactional outbox polling workers and Kafka event dispatchers
+Create or update your `src/main/resources/application.yml` with the following infrastructure connection properties:
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ledger_db
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+server:
+  port: 8080
+  threads:
+    virtual:
+      enabled: true # Enable Java 21 Virtual Threads
 ```
 
 ---
@@ -111,30 +129,8 @@ Start PostgreSQL, Redis, and Apache Kafka locally using Docker Compose:
 docker-compose up -d
 ```
 
-#### 3. Configure Application Properties
-Verify your `src/main/resources/application.yml` or `application.properties` points to the local infrastructure endpoints:
-
-```yaml
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/ledger_db
-    username: postgres
-    password: password
-  data:
-    redis:
-      host: localhost
-      port: 6379
-  kafka:
-    bootstrap-servers: localhost:9092
-```
-
-#### 4. Build and Run the Application
+#### 3. Build and Run the Application
 Run the Spring Boot application using the Maven wrapper:
 ```bash
 ./mvnw spring-boot:run
 ```
-
----
-
-## License
-This project is licensed under the terms of the **MIT License**.

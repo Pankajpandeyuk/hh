@@ -11,11 +11,16 @@ Its primary mission is to enforce strict ACID durability, execute pessimistic ro
 Within `com.fintech.ledger.storage`:
 
 ```plaintext
-storage
-│
-├── accounts/      ──► [1. Account Vault]       ──► Pessimistic locking (SELECT FOR UPDATE) & balance persistence
-├── transactions/  ──► [2. Transaction Ledger]  ──► Master transfer records, metadata & status management
-└── entries/       ──► [3. Journal Entries]     ──► Immutable, append-only debit/credit line items
+storage/
+├── accounts/
+│   ├── AccountRepository.java         # Database queries with pessimistic row locking (SELECT ... FOR UPDATE)
+│   └── AccountPersistenceAdapter.java # Maps domain models to PostgreSQL relational entities
+├── transactions/
+│   ├── TransactionRepository.java     # Master transaction record persistence and retrieval
+│   └── TransactionEntity.java         # JPA entity mapping for transaction metadata and idempotency keys
+└── entries/
+    ├── EntryRepository.java           # Batch insertion handler for append-only journal entries
+    └── TransactionEntryEntity.java    # JPA entity mapping for immutable debit/credit journal lines
 ```
 
 ---

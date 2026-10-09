@@ -7,13 +7,16 @@ The **`deduplication`** package acts as the system's traffic bouncer and safety 
 ## Visual Structure & Data Flow Within `deduplication`
 
 ```text
-com.fintech.ledger.deduplication
-│
-├── keys/          ──► [1. Fingerprint Extractor] ──► Parses Idempotency-Key & hashes payload (SHA-256)
-│
-├── locks/         ──► [2. Concurrency Guard]     ──► Acquires Redis atomic distributed lock (SETNX)
-│
-└── cache/         ──► [3. Replay Storage]        ──► Temporarily stores completed receipts (with TTL)
+deduplication/
+├── keys/
+│   ├── IdempotencyKeyExtractor.java   # Extracts and validates the Idempotency-Key HTTP header
+│   └── PayloadHasher.java             # Generates cryptographic SHA-256 hashes of request bodies
+├── locks/
+│   ├── RedisLockManager.java          # Manages atomic Redis distributed locks (SETNX with TTL)
+│   └── LockAcquisitionException.java  # Exception thrown when concurrent duplicate requests collide (409 Conflict)
+└── cache/
+    ├── ReceiptCacheRepository.java    # Saves and retrieves completed transaction receipts in Redis
+    └── ReplayHandler.java             # Intercepts repeated keys to replay cached receipts instantly
 ```
 
 ---

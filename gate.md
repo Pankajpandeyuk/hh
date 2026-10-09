@@ -11,11 +11,18 @@ Its core responsibility is to translate external network protocols into clean, v
 Within `com.fintech.ledger.gateway`:
 
 ```plaintext
-gateway
-│
-├── routes/   ──► [1. REST Endpoints]        ──► Maps URLs & HTTP methods (e.g., POST /v1/transfers)
-├── schemas/  ──► [2. Data Contracts]        ──► Immutable DTOs for request payloads & receipts
-└── errors/   ──► [3. Exception Handler]     ──► Translates internal domain exceptions to HTTP codes
+gateway/
+├── routes/
+│   ├── TransferController.java        # REST endpoints for executing financial transfers and lookups
+│   └── AccountController.java         # REST endpoints for account creation, balance checks, and status queries
+├── schemas/
+│   ├── TransferRequestDto.java        # Incoming transfer payload validation contract (amounts, currency, keys)
+│   ├── TransferResponseDto.java       # Standardized success receipt returned to clients
+│   ├── AccountCreateRequestDto.java   # Onboarding request payload for new accounts
+│   └── AccountResponseDto.java        # Account details and current balance representation
+└── errors/
+    ├── GlobalExceptionHandler.java    # Centralized @ControllerAdvice mapping domain errors to HTTP statuses
+    └── ApiErrorResponse.java          # Uniform error payload structure (timestamps, codes, messages)
 ```
 
 ---

@@ -11,11 +11,16 @@ This package solves that problem by implementing the **Transactional Outbox Patt
 Within `com.fintech.ledger.streaming`:
 
 ```plaintext
-streaming
-│
-├── outbox/        ──► [1. Outbox Staging]      ──► Atomic staging table for pending event records
-├── publisher/     ──► [2. Background Poller]   ──► Scheduled relay worker tracking un-dispatched messages
-└── dispatcher/    ──► [3. Kafka Producer]      ──► Delivers event payloads to Apache Kafka topics
+streaming/
+├── outbox/
+│   ├── OutboxRepository.java          # Database persistence for staging pending event messages
+│   └── OutboxEventEntity.java         # JPA entity mapping for the outbox staging table
+├── publisher/
+│   ├── OutboxPoller.java              # Scheduled background worker scanning for unpublished events
+│   └── OutboxRelayService.java        # Manages batch relay logic, error backoff, and status updates
+└── dispatcher/
+    ├── KafkaEventProducer.java        # Spring Kafka template wrapper publishing messages to topics
+    └── EventPayloadSerializer.java    # Serializes transaction receipts and journal logs into JSON schemas
 ```
 
 ---

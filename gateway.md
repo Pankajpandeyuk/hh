@@ -11,11 +11,20 @@ It is completely decoupled from frameworks, containing pure business entities, s
 Within `com.fintech.ledger.ledger`:
 
 ```plaintext
-ledger
-│
-├── models/        ──► [1. Domain Entities]    ──► Immutable data representations (Account, Transaction, Entry)
-├── types/         ──► [2. Financial Enums]    ──► Strict classifications (DEBIT/CREDIT, AccountType, Status)
-└── exceptions/    ──► [3. Domain Errors]      ──► Accounting rule infractions (InsufficientFunds, ZeroSum)
+ledger/
+├── models/
+│   ├── Ledger.java                    # Overarching financial ledger book or domain boundary
+│   ├── Account.java                   # Individual account entity holding balance states and types
+│   ├── LedgerTransaction.java         # Master transfer transaction aggregate record
+│   └── TransactionEntry.java          # Immutable journal line item (debit or credit ledger entry)
+├── types/
+│   ├── EntryDirection.java            # Accounting direction enum: DEBIT / CREDIT
+│   ├── AccountType.java               # Account classification enum: ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE
+│   └── TransactionStatus.java         # Lifecycle state enum: PENDING, COMMITTED, REJECTED, REVERSED
+└── exceptions/
+    ├── InsufficientFundsException.java # Thrown when debit exceeds available account balance
+    ├── ZeroSumViolationException.java  # Thrown when transaction legs fail the zero-sum balance math
+    └── AccountFrozenException.java     # Thrown when operating on a suspended or closed account
 ```
 
 ---

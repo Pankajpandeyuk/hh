@@ -1,4 +1,4 @@
-# 🏛️ Architecture & System Design (`ARCHITECTURE.md`)
+# Architecture & System Design (`ARCHITECTURE.md`)
 
 This document defines the high-level system architecture, package boundaries, fault isolation guarantees, and a **debugging & error-tracing matrix** for the **Core Financial Settlement & Double-Entry Ledger Engine**.
 
@@ -6,7 +6,7 @@ Designed around strict separation of concerns, the codebase is segregated into *
 
 ---
 
-## 🚀 System Bootstrap: `LedgerApplication.java`
+## System Bootstrap: `LedgerApplication.java`
 
 `LedgerApplication.java` serves as the core entry point and runtime orchestrator:
 
@@ -15,7 +15,7 @@ Designed around strict separation of concerns, the codebase is segregated into *
 
 ---
 
-## 🗂️ High-Level Package Boundaries & Responsibilities
+## High-Level Package Boundaries & Responsibilities
 
 ```text
 com.fintech.ledger
@@ -62,7 +62,7 @@ com.fintech.ledger
 
 ---
 
-## 🔍 Debugging & Error-Tracing Matrix (Finding Errors by Package)
+## Debugging & Error-Tracing Matrix (Finding Errors by Package)
 
 When investigating bugs, performance bottlenecks, or production alerts, use this package-mapped troubleshooting guide to isolate the root cause instantly:
 
@@ -77,7 +77,7 @@ When investigating bugs, performance bottlenecks, or production alerts, use this
 
 ---
 
-## 🔄 End-to-End System Execution Flow
+## End-to-End System Execution Flow
 
 ```text
 [ Client / Webhook ]
